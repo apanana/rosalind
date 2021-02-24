@@ -37,3 +37,27 @@ too large for direct calculation...
 
 
 """
+
+"""
+found another symmetry:
+Treat AA and aa the same.
+Prob of AA x Aa giving Aa = 1/2, not Aa (i.e AA) = 1/2
+Prob of aa x Aa giving Aa = 1/2, not Aa (i.e. aa) = 1/2
+(Also recall Aa x Aa giving Aa is also 1/2)
+So probability for any individual is always 1/2 !!! :D :D :D
+----
+Working back to AaBb, we have
+P(AaBb) = 1/4, P(!AaBb) = 3/4 for any given individual :')
+thank god no monte carlo <3
+"""
+from math import comb
+
+def lia(k,n):
+	tot = 2**k
+	p = (0.75**tot)
+	for i in range(1,n):
+		p += (0.75**(tot-i))*(0.25**(i))*comb(tot,i)
+	p = 1-p
+	return round(p,3)
+
+print(lia(6,19))
