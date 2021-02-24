@@ -47,7 +47,7 @@ def full(L):
 	bs_l = [L[1]]
 	bs_r = []
 	P = L[0]
-	for i in range(2, len(L)/2+1):
+	for i in range(2, len(L)//2+1):
 		diff = round(L[i] - bs_l[-1], 5)
 		if diff in weights.keys():
 			bs_l.append(L[i])
