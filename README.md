@@ -17,3 +17,6 @@
 - bins
 - prob
 
+# python3 only: (math.comb)
+- lia
+- aspc
