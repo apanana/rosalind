@@ -35,69 +35,80 @@ intuitively i think it would work bc of the >half overlap but not sure how to
 state the logic
 """
 
+def len_overlap(s1,s2):
+	# compares left of s1 to right of s2
+	w = min(len(s1),len(s2))
+	while w > min(len(s1)//2,len(s2)//2):
+		if s1[:w] == s2[-w:]:
+			return w
+		else:
+			w -= 1
+	return 0
+
 def shortest_superstring(strs):
 	sup = strs[0]
 	strs.remove(strs[0])
-	left = False
+	# once we find the right edge, search towards the left
 	right = False
 	while len(strs) > 0:
-		print(sup, strs)
-		# compare left side of superstring with right sides of all strings
-		if not left:
-			print("LEFT")
-			max_overlap = 0
-			max_str = ""
-			for st in strs:
-				# print("sup: " + sup + ", st: " + st)
-				width = min(len(sup),len(st))
-				for i in range(width//2,width):
-					if len(sup[:i]) != len(st[-i:]):
-						print("lens no equal")
-						print(sup[:i],st[-i:])
-						print()
-						return
-					if sup[:i] == st[i]:
-						if i > max_overlap:
-							max_overlap = i
-							max_str = st
-			if max_str != "":
-				sup = max_str + sup[max_overlap:]
-				strs.remove(max_str)
-				print("max overlap:")
-				print(max_str,max_overlap)
-				print
-			else:
-				left = True
-		# compare right side of superstring with left side of all strings
-		if not right:
-			print("RIGHT")
-			max_overlap = 0
-			max_str = ""
-			for st in strs:
-				width = min(len(sup),len(st))
-				# print("sup: " + sup + ", st: " + st)
-				# print("width: " + str(width) + " len(sup):" + str(len(sup)) + " len(st):" + str(len(st)))
-				for i in range(width//2):
-					if len(sup[-width//2-i:]) != len(st[:width//2+i]):
-						print("lens no equal")
-						print(width, i, width//2-i, width//2+i)
-						print(sup[-width//2-i:],st[:width//2+i])
-						print()
-						return
-					# print(i,width//2-i,sup[-width//2-i:],st[:width//2+i])
-					if sup[-width//2-i:] == st[:width//2+i]:
-						if (-width//2-i) < max_overlap:
-							max_overlap = -width//2-i
-							max_str = st
-			if max_str != "":
-				print("CONSTRUCT NEW STRING")
-				print(sup, max_str,max_overlap)
-				sup = sup[:max_overlap] + max_str
-				strs.remove(max_str)
-				print("max overlap:")
-				print(max_str,max_overlap)
-				print
+		max_overlap = 0
+		max_str = ""
+		for st in strs:
+			w = len_overlap(st,sup) if (not right) \
+									else len_overlap(sup,st)
+			if w > max_overlap:
+				max_overlap = w
+				max_str = st
+		if max_str != "":
+			sup = (sup[:-max_overlap] + max_str) if (not right) \
+									else (max_str + sup[max_overlap:])
+			strs.remove(max_str)
+		else:
+			right = True
 	return sup
+
+# def shortest_superstring(strs):
+# 	sup = strs[0]
+# 	strs.remove(strs[0])
+# 	# save ourselves a bit of time once we find an edge
+# 	left = False
+# 	right = False
+# 	while len(strs) > 0:
+# 		# compare left side of superstring with right sides of all strings
+# 		if not left:
+# 			max_overlap = 0
+# 			max_str = ""
+# 			for st in strs:
+# 				w = min(len(sup),len(st))
+# 				while w > min(len(st)//2,len(sup)//2):
+# 					if st[-w:] == sup[:w]:
+# 						if w > max_overlap:
+# 							max_overlap = w
+# 							max_str = st
+# 					w -=1
+# 			if max_str != "":
+# 				sup = max_str + sup[max_overlap:]
+# 				strs.remove(max_str)
+# 			else:
+# 				left = True
+# 		# compare right side of superstring with left side of all strings
+# 		if not right:
+# 			max_overlap = 0
+# 			max_str = ""
+# 			for st in strs:
+# 				w = min(len(sup),len(st))
+# 				while w > min(len(st)//2,len(sup)//2):
+# 					if sup[-w:] == st[:w]:
+# 						if w > max_overlap:
+# 							max_overlap = w
+# 							max_str = st
+# 					w -= 1
+# 			if max_str != "":
+# 				sup = sup[:-max_overlap] + max_str
+# 				strs.remove(max_str)
+# 			else:
+# 				right = True
+# 	return sup
 
 f = open("rosalind_long.txt","r")
 strs = []
@@ -110,10 +121,5 @@ for line in f.readlines():
 	else:
 		s += line.strip('\n')
 strs.append(s)
-
-expected = "ATTAGACCTGCCGGAATAC"
-calc = shortest_superstring(strs)
-print("RESULTS:")
-print(expected)
-print(calc)
-print(expected==calc)
+res = shortest_superstring(strs)
+print(res)
