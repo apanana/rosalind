@@ -16,6 +16,7 @@
 - mer
 - bins
 - prob
+- pdpl
 
 # python3 only: (math.comb)
 - lia
