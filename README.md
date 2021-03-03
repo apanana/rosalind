@@ -3,6 +3,7 @@
 # to optimize:
 - lcsm (kinda slow)
 - prsm (hella slow T_T)
+- lgis (kinda slow)
 
 # python2 only: (iteritems)
 - prsm
